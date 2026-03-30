@@ -35,7 +35,7 @@ export default function App() {
             </div>
           </div>
           <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 500 }}>
-            Motor Tarifario Dinámico — CANON 2026
+            Motor Tarifario Dinámico — 
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
