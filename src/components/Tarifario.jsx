@@ -50,25 +50,34 @@ export default function Tarifario({ vars, factor }) {
             </thead>
             <tbody>
               {rows.map((r, i) => {
-                const { nc, np } = calcTarifa(r.cob, r.pag, factor.total, vars.margen, isRM)
-                const mhoy = r.cob > 0 ? (r.cob - r.pag) / r.cob : 1
-                const mnew = nc > 0 ? (nc - np) / nc : 0
-                const alza = nc - r.cob
-                const alzap = r.cob > 0 ? alza / r.cob : 0
-                const ok = mnew >= vars.margen / 100 - 0.001
+                const { nc, np, margenHoy, margenNuevo, necesitaAjuste } = calcDetalle(r.cob, r.pag, factor.total, vars.margen, isRM)
                 return (
-                  <tr key={i}>
+                  <tr key={i} style={{ background: necesitaAjuste ? '#FFFBF5' : 'transparent' }}>
                     <td>{r.zona}{r.veh ? ` (${r.veh})` : ''}</td>
                     <td><Badge variant="blue">{TAM_LABELS[r.tam]}</Badge></td>
                     <td>${fmt(r.cob)}</td>
                     <td>${fmt(r.pag)}</td>
-                    <td>{pct(mhoy)}</td>
-                    <td style={{ color: '#F47920', fontWeight: 600, background: '#FFF3E8' }}>${fmt(nc)}</td>
-                    <td style={{ background: '#FFF3E8' }}>${fmt(np)}</td>
-                    <td style={{ color: ok ? '#16A34A' : '#DC2626', fontWeight: 600, background: '#FFF3E8' }}>{pct(mnew)}</td>
-                    <td style={{ color: '#F47920', fontWeight: 600 }}>+${fmt(alza)}</td>
-                    <td style={{ color: '#F47920', fontWeight: 600 }}>{pctSigned(alzap)}</td>
-                    <td><Badge variant={ok ? 'green' : 'red'}>{ok ? 'OK' : 'Revisar'}</Badge></td>
+                    <td>{pct(margenHoy)}</td>
+                    <td style={{ color: necesitaAjuste ? '#F47920' : '#16A34A', fontWeight: 600, background: necesitaAjuste ? '#FFF3E8' : '#F0FDF4' }}>
+                      ${fmt(nc)}
+                    </td>
+                    <td style={{ background: necesitaAjuste ? '#FFF3E8' : '#F0FDF4' }}>
+                      ${fmt(np)}
+                    </td>
+                    <td style={{ color: '#16A34A', fontWeight: 600, background: necesitaAjuste ? '#FFF3E8' : '#F0FDF4' }}>
+                      {pct(margenNuevo)}
+                    </td>
+                    <td style={{ color: necesitaAjuste ? '#F47920' : '#6B7A99', fontWeight: 600 }}>
+                      {necesitaAjuste ? '+$' + fmt(nc - r.cob) : '—'}
+                    </td>
+                    <td style={{ color: necesitaAjuste ? '#F47920' : '#6B7A99', fontWeight: 600 }}>
+                      {necesitaAjuste ? pctSigned((nc - r.cob) / r.cob) : '—'}
+                    </td>
+                    <td>
+                      <Badge variant={necesitaAjuste ? 'orange' : 'green'}>
+                        {necesitaAjuste ? 'Ajustar precio' : 'Margen OK'}
+                      </Badge>
+                    </td>
                   </tr>
                 )
               })}
