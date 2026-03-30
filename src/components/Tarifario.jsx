@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Card, Badge, TableWrapper } from './UI.jsx'
-import { DATA_VINA, DATA_RM, calcTarifa, fmt, pct, pctSigned, TAM_LABELS } from '../data.js'
+import { DATA_VINA, DATA_RM, calcTarifa, calcDetalle, fmt, pct, pctSigned, TAM_LABELS } from '../data.js'
 
 export default function Tarifario({ vars, factor }) {
   const [cecos, setCecos] = useState('C_VIÑA')
