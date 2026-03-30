@@ -23,12 +23,27 @@ function FormulaLine({ vars, factor }) {
         <span style={{ color: '#F47920' }}>Factor = 1 + {(fComb*100).toFixed(1)}% + {(fIpc*100).toFixed(1)}% + {(fUsd*100).toFixed(1)}% + {(fOp*100).toFixed(1)}%</span>
         <span style={{ color: '#fff', fontWeight: 700 }}> = {total.toFixed(4)}x</span>
       </div>
-      <div style={{ marginTop: 8, color: 'rgba(255,255,255,0.4)', fontSize: 10 }}>
-        {'// Nuevo cobrar C_VIÑA: solo sube si margen cae bajo ' + vars.margen + '%'}
+      <div style={{ color: 'rgba(255,255,255,0.2)', margin: '8px 0 4px' }}>{'—'.repeat(48)}</div>
+      <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 10, marginBottom: 4 }}>
+        // PASO 1 — El factor se aplica sobre lo que pagas al tercero
+      </div>
+      <div>
+        <span style={{ color: '#60A5FA' }}>Nuevo_Pagar</span>
+        <span style={{ color: '#fff' }}> = Pagar_actual × {total.toFixed(3)}</span>
+      </div>
+      <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 10, margin: '6px 0 4px' }}>
+        // PASO 2 — Desde el nuevo pagar se obtiene el cobrar para mantener {vars.margen}% de margen
       </div>
       <div>
         <span style={{ color: '#F47920' }}>Nuevo_Cobrar</span>
-        <span style={{ color: '#fff' }}> = MAX(Cobrar_actual, (Pagar x {total.toFixed(3)}) / (1 - {vars.margen}%))</span>
+        <span style={{ color: '#fff' }}> = Nuevo_Pagar / (1 - {vars.margen}%)</span>
+      </div>
+      <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 10, margin: '6px 0 4px' }}>
+        // PASO 3 — Solo se ajusta el cobrar si el margen actual ya no cubre el {vars.margen}%
+      </div>
+      <div>
+        <span style={{ color: '#16A34A' }}>Cobrar_final</span>
+        <span style={{ color: '#fff' }}> = MAX(Cobrar_actual, Nuevo_Cobrar)</span>
       </div>
     </div>
   )
