@@ -120,8 +120,17 @@ export function calcTarifa(cob, pag, factor, margen, isRM) {
     return { nc: Math.round(cob * factor), np: 0 }
   }
   const np = Math.round(pag * factor)
-  const nc = Math.round(np / (1 - margen / 100))
+  const ncMinimo = Math.round(np / (1 - margen / 100))
+  const nc = Math.max(cob, ncMinimo)
   return { nc, np }
+}
+
+export function calcDetalle(cob, pag, factor, margen, isRM) {
+  const { nc, np } = calcTarifa(cob, pag, factor, margen, isRM)
+  const margenHoy = cob > 0 ? (cob - pag) / cob : 0
+  const margenNuevo = nc > 0 ? (nc - np) / nc : 0
+  const necesitaAjuste = nc > cob
+  return { nc, np, margenHoy, margenNuevo, necesitaAjuste }
 }
 
 export const fmt = (n) =>
